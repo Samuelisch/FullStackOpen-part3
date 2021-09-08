@@ -2,8 +2,10 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
+require('dotenv').config();
 
-const url = 'mongodb+srv://samuelisch:Sw36EnpeZ3TNQ3dB@cluster0.vkmva.mongodb.net/contact-list?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URL;
 
 console.log('connecting to url');
 
@@ -20,6 +22,7 @@ const personSchema = new mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
+    unique: true,
   },
   number: {
     type: String,
@@ -38,4 +41,5 @@ personSchema.set('toJSON', {
   },
 });
 
+personSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('Person', personSchema);

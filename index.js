@@ -2,24 +2,29 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
+const Person = require('./models/person');
 
 const app = express();
-const Person = require('./models/person');
+
+morgan.token('content', (request, response) => JSON.stringify(request.body));
 
 app.use(express.static('build'));
 app.use(express.json());
+app.use(cors());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'));
-
-morgan.token('content', (request, response) => JSON.stringify(request.body));
 
 let people = [];
 
 app.get('/info', (request, response) => {
-  const date = new Date();
-  response.send(`
-    <p>Phonebook has info for ${people.length} people</p>
-    <p>${date}</p>
-  `);
+  Person.find({}).then((persons) => {
+    const content = `
+      Phonebook has info for ${persons.length} people
+      <br/><br/>
+      ${new Date()}
+    `;
+    response.send(content);
+  });
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -36,7 +41,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((err) => next(err));
