@@ -3,9 +3,8 @@
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
-require('dotenv').config();
 
-const url = process.env.MONGODB_URL;
+const url = process.env.MONGODB_URI;
 
 console.log('connecting to url');
 
@@ -30,8 +29,6 @@ const personSchema = new mongoose.Schema({
     minLength: 8,
   },
 });
-
-const Person = mongoose.model('Person', personSchema);
 
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {

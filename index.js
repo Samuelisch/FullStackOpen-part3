@@ -85,7 +85,9 @@ app.post('/api/persons', (request, response, next) => {
     .then((savedAndFormattedContact) => {
       response.json(savedAndFormattedContact);
     })
-    .catch((err) => next(err));
+    .catch((err) => {
+      next(err);
+    });
 });
 
 const unknownEndpoint = (request, response) => {
