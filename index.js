@@ -68,9 +68,15 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   };
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
-    .then((updatedContact) => {
-      response.json(updatedContact);
+  const opts = {
+    runValidators: true,
+    context: 'query',
+    new: true,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, opts)
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
     })
     .catch((error) => next(error));
 });
@@ -89,9 +95,7 @@ app.post('/api/persons', (request, response, next) => {
     .then((savedAndFormattedContact) => {
       response.json(savedAndFormattedContact);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => next(err));
 });
 
 const unknownEndpoint = (request, response) => {
