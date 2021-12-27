@@ -16,6 +16,10 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :c
 
 let people = [];
 
+app.get('/', (request, response) => {
+  response.status(200).end();
+});
+
 app.get('/info', (request, response) => {
   Person.find({}).then((persons) => {
     const content = `
